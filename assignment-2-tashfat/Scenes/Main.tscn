@@ -1,0 +1,102 @@
+[gd_scene load_steps=17 format=3 uid="uid://bhd0vt62ieptk"]
+
+[ext_resource type="Script" uid="uid://dw6wug21vn8dq" path="res://Scripts/xr_setup.gd" id="1_vy5pj"]
+[ext_resource type="Script" uid="uid://lp6p2hsfhgps" path="res://Scripts/Controller.gd" id="2_bmxlf"]
+[ext_resource type="PackedScene" uid="uid://baxxsdvp1pv3j" path="res://Assets/OculusQuest2TouchController_Left.gltf" id="3_4kpch"]
+[ext_resource type="Material" uid="uid://d08gsfhhpvgi2" path="res://Materials/Red.tres" id="4_grg3l"]
+[ext_resource type="Script" uid="uid://c22ran0ytxrum" path="res://Scripts/LineRenderer.gd" id="5_frkhe"]
+[ext_resource type="PackedScene" uid="uid://ciw62xw8yucsk" path="res://Assets/OculusQuest2TouchController_Right.gltf" id="6_1p5hy"]
+[ext_resource type="Material" uid="uid://dmgt5k8kwj6v8" path="res://Materials/Blue.tres" id="7_h1m7h"]
+[ext_resource type="Script" uid="uid://cu6rdc7ba5c7s" path="res://Scripts/BoxSpawner.gd" id="8_erwvk"]
+[ext_resource type="PackedScene" uid="uid://b487xuxxhe0pv" path="res://Scenes/Box.tscn" id="9_2w5on"]
+[ext_resource type="AudioStream" uid="uid://c5ng6tnq58ao3" path="res://Audio/crate-break.mp3" id="10_bmxlf"]
+[ext_resource type="AudioStream" uid="uid://40bv8gc5idej" path="res://Audio/music.mp3" id="11_4kpch"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_21xkr"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vy5pj"]
+height = 1.001
+radius = 0.1
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_6bp64"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6bp64"]
+height = 1.001
+radius = 0.1
+
+[sub_resource type="Environment" id="Environment_jjvhh"]
+
+[node name="Main" type="Node3D"]
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+script = ExtResource("1_vy5pj")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.194119, 0.623035)
+
+[node name="LeftController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"left_hand"
+script = ExtResource("2_bmxlf")
+
+[node name="QuestControllerModel" parent="XROrigin3D/LeftController" instance=ExtResource("3_4kpch")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/LeftController"]
+material_override = ExtResource("4_grg3l")
+mesh = SubResource("ImmediateMesh_21xkr")
+script = ExtResource("5_frkhe")
+
+[node name="Area3D" type="Area3D" parent="XROrigin3D/LeftController"]
+collision_layer = 256
+collision_mask = 256
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/LeftController/Area3D"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, 0, -0.5)
+shape = SubResource("CylinderShape3D_vy5pj")
+
+[node name="RightController" type="XRController3D" parent="XROrigin3D"]
+tracker = &"right_hand"
+script = ExtResource("2_bmxlf")
+
+[node name="QuestControllerModel" parent="XROrigin3D/RightController" instance=ExtResource("6_1p5hy")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="LineRenderer" type="MeshInstance3D" parent="XROrigin3D/RightController"]
+material_override = ExtResource("7_h1m7h")
+mesh = SubResource("ImmediateMesh_6bp64")
+script = ExtResource("5_frkhe")
+
+[node name="Area3D" type="Area3D" parent="XROrigin3D/RightController"]
+collision_layer = 65536
+collision_mask = 65536
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/RightController/Area3D"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, 0, -0.5)
+shape = SubResource("CylinderShape3D_6bp64")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jjvhh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.182521, 0)
+
+[node name="BoxSpawner" type="Node3D" parent="."]
+script = ExtResource("8_erwvk")
+box_scene = ExtResource("9_2w5on")
+even_material = ExtResource("7_h1m7h")
+odd_material = ExtResource("4_grg3l")
+
+[node name="SoundEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_bmxlf")
+volume_db = 10.0
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_4kpch")
+autoplay = true
+
+[connection signal="button_pressed" from="XROrigin3D/LeftController" to="XROrigin3D/LeftController" method="_on_button_pressed"]
+[connection signal="button_pressed" from="XROrigin3D/LeftController" to="XROrigin3D/LeftController" method="_on_ax_button_pressed"]
+[connection signal="area_entered" from="XROrigin3D/LeftController/Area3D" to="XROrigin3D/LeftController" method="_on_area_3d_area_entered"]
+[connection signal="button_pressed" from="XROrigin3D/RightController" to="XROrigin3D/RightController" method="_on_button_pressed"]
+[connection signal="button_pressed" from="XROrigin3D/RightController" to="XROrigin3D/RightController" method="_on_ax_button_pressed"]
+[connection signal="area_entered" from="XROrigin3D/RightController/Area3D" to="XROrigin3D/RightController" method="_on_area_3d_area_entered"]
