@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="assignment-2-tashfat"
+config/name="Tashfat-Assignment-02"
 run/main_scene="uid://bhd0vt62ieptk"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 
 [xr]
 

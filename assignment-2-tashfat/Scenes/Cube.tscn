@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bhwkc33jtw86d"]
+
+[ext_resource type="Script" uid="uid://biwtgmj60b28p" path="res://Scripts/CubeMovement.gd" id="2_57ke7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_p6ket"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ego7h"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[node name="Cube" type="Node3D"]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+mesh = SubResource("BoxMesh_p6ket")
+script = ExtResource("2_57ke7")
+
+[node name="Area3D" type="Area3D" parent="CSGMesh3D"]
+collision_layer = 256
+collision_mask = 256
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGMesh3D/Area3D"]
+shape = SubResource("BoxShape3D_ego7h")
